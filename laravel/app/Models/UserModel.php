@@ -148,4 +148,17 @@ class UserModel implements UserModelInterface
             return false;
         }
     }
+
+    public static function isAdmin(int $id): bool {
+        $user = DB::table('users')
+            ->select('is_admin')
+            ->where('id', $id)
+            ->first();
+
+        if ($user && $user->is_admin === 'Y') {
+            return true; // Usuário é admin
+        }
+
+        return false; // Usuário não é admin
+    }
 }
