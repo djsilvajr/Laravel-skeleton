@@ -19,8 +19,10 @@ class ApiAuthenticate
             // dd($token);die;
             // Usar o JWTAuth para autenticar o usuário com base no token
             Auth::shouldUse('api');
-            $payload = JWTAuth::parseToken()->getPayload();
-            $user = AuthModel::find(1);
+            $token = JWTAuth::getToken(); // Obtém o token da requisição
+            $payload = JWTAuth::getPayload($token); // Decodifica o token
+            $userId = $payload->get('sub'); // Obtém o "sub", que é o ID do usuário
+            $user = AuthModel::find($userId);
             // Se o usuário não for encontrado
             if (!$user) {
                 return response()->json(['status' => false, 'message' => 'Usuário não autenticado.'], 401);
