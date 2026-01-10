@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Requests;
+namespace App\Http\Requests;
 use App\Contracts\RequestValidationInterface;
 use App\Exceptions\ParametrosInvalidosException;
 use App\Helpers\Validator;
 
-class GetUserByIdRequest implements RequestValidationInterface
+class DeleteUserByIdRequest implements RequestValidationInterface
 {
     public static function validate(array $credentials) : void {
         $id = $credentials['id'] ?? 0;

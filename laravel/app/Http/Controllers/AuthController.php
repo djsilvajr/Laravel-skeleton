@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 use App\Exceptions\CredenciaisInvalidasException;
-use App\Requests\LoginRequest;
+use App\Http\Requests\LoginRequest;
 use App\Models\AuthModel;
 
 class AuthController extends Controller

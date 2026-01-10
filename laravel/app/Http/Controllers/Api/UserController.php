@@ -8,10 +8,10 @@ use Illuminate\Http\JsonResponse;
 
 use App\Services\UserService;
 
-use App\Requests\GetUserByIdRequest;
-use App\Requests\InsertUserRequest;
-use App\Requests\PutUserByIdRequest;
-use App\Requests\DeleteUserByIdRequest;
+use App\Http\Requests\GetUserByIdRequest;
+use App\Http\Requests\InsertUserRequest;
+use App\Http\Requests\PutUserByIdRequest;
+use App\Http\Requests\DeleteUserByIdRequest;
 
 
 class UserController extends Controller

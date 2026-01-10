@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Requests;
+namespace App\Http\Requests;
 use App\Contracts\RequestValidationInterface;
 use App\Exceptions\ParametrosInvalidosException;
 use App\Helpers\Validator;
