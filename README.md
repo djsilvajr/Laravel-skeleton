@@ -1,5 +1,35 @@
 # Laravel-skeleton
+
+![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?logo=php&logoColor=white)
+![Laravel](https://img.shields.io/badge/Laravel-12-FF2D20?logo=laravel&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)
+![Tests](https://img.shields.io/badge/Tests-PHPUnit-3776AB?logo=php&logoColor=white)
+![JWT](https://img.shields.io/badge/Auth-JWT-000000?logo=jsonwebtokens&logoColor=white)
+![Redis](https://img.shields.io/badge/Cache-Redis-DC382D?logo=redis&logoColor=white)
+![Swagger](https://img.shields.io/badge/API-Swagger-85EA2D?logo=swagger&logoColor=black)
+
 > Esqueleto de projeto laravel com rotas de autenticação + usuarios bem definidas + testes funcionais e unitarios mockery e provider como exemplo.  
+
+> ⚠️ **IMPORTANTE**: Este é um projeto skeleton/boilerplate configurado para **ambiente de desenvolvimento**. 
+> As configurações de segurança estão simplificadas para facilitar o setup inicial.
+> **Não use estas configurações em produção sem as devidas alterações de segurança.**
+
+---
+
+## 🎯 Sobre este projeto
+
+Este skeleton Laravel fornece uma base sólida para desenvolvimento de APIs RESTful, incluindo:
+
+- ✅ **Arquitetura em camadas** (Controllers, Services, Models, Requests)
+- ✅ **Autenticação JWT** para APIs stateless
+- ✅ **Testes unitários e de integração** com Mockery e PHPUnit
+- ✅ **Cache distribuído** com Redis
+- ✅ **Documentação automática** com Swagger/OpenAPI
+- ✅ **Observabilidade** com OpenTelemetry
+- ✅ **Dependency Injection** e Service Providers
+- ✅ **Validações customizadas** e Exception Handling
+- ✅ **Ambiente dockerizado** pronto para uso
+
 ---
 
 ## 🗂️ Estrutura do repositório
@@ -132,6 +162,28 @@ e up -d`
 - [ ] Testar em [http://localhost:8020](http://localhost:8020)  
 
 Pronto 🎉 Sua aplicação Laravel estará rodando com banco de dados populado!
+
+---
+
+## 🔒 Checklist de Segurança para Produção
+
+Este skeleton usa configurações simplificadas para desenvolvimento. **Antes de deployar em produção**, certifique-se de:
+
+- [ ] Mover todas as credenciais para variáveis de ambiente (`.env`)
+- [ ] Configurar senha forte para o usuário root do MySQL
+- [ ] Alterar a senha do Redis (`REDIS_PASSWORD` no `.env`)
+- [ ] Configurar `APP_DEBUG=false` no `.env`
+- [ ] Gerar chaves fortes (`APP_KEY` e `JWT_SECRET`)
+- [ ] Configurar HTTPS/TLS
+- [ ] Revisar permissões de arquivos e diretórios
+- [ ] Configurar CORS adequadamente
+- [ ] Implementar rate limiting nas rotas de API
+- [ ] Revisar e atualizar dependências (`composer update`)
+- [ ] Configurar backups automáticos do banco de dados
+- [ ] Implementar logs de auditoria
+- [ ] Remover ou proteger a rota `/api/documentation` do Swagger
+
+---
 
 
 ## Links das aplicações
