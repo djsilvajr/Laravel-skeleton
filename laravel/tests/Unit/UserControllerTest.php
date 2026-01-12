@@ -4,7 +4,7 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use Mockery;
-use App\Models\Contracts\UserModelInterface;
+use App\Repository\Contracts\UserRepositoryInterface;
 
 class UserControllerTest extends TestCase
 {
@@ -17,14 +17,14 @@ class UserControllerTest extends TestCase
 
     public function test_service_getUserById_returns_array_when_found(): void
     {
-        $userModelMock = Mockery::mock(UserModelInterface::class);
-        $userModelMock->shouldReceive('getUserById')->once()->with(1)->andReturn([
+        $userRepositoryMock = Mockery::mock(UserRepositoryInterface::class);
+        $userRepositoryMock->shouldReceive('getUserById')->once()->with(1)->andReturn([
             'id' => 1,
             'name' => 'John Doe',
             'email' => 'john@example.test'
         ]);
 
-        $this->app->instance(UserModelInterface::class, $userModelMock);
+        $this->app->instance(UserRepositoryInterface::class, $userRepositoryMock);
         $service = $this->app->make(\App\Services\UserService::class);
         $result = $service->getUserById(1);
         $this->assertIsArray($result);
@@ -37,10 +37,10 @@ class UserControllerTest extends TestCase
     {
         $this->expectException(\App\Exceptions\RecursoNaoEncontradoException::class);
 
-        $userModelMock = Mockery::mock(UserModelInterface::class);
-        $userModelMock->shouldReceive('getUserById')->once()->with(1)->andReturn([]);
+        $userRepositoryMock = Mockery::mock(UserRepositoryInterface::class);
+        $userRepositoryMock->shouldReceive('getUserById')->once()->with(1)->andReturn([]);
 
-        $this->app->instance(UserModelInterface::class, $userModelMock);
+        $this->app->instance(UserRepositoryInterface::class, $userRepositoryMock);
         $service = $this->app->make(\App\Services\UserService::class);
 
         $service->getUserById(1); 
@@ -48,9 +48,9 @@ class UserControllerTest extends TestCase
 
     public function test_service_insertUser_returns_array_on_success(): void
     {
-        $userModelMock = Mockery::mock(UserModelInterface::class);
-        $userModelMock->shouldReceive('getUserByEmail')->once()->with('jane@example.test')->andReturn([]);
-        $userModelMock->shouldReceive('insertUser')->once()->with([
+        $userRepositoryMock = Mockery::mock(UserRepositoryInterface::class);
+        $userRepositoryMock->shouldReceive('getUserByEmail')->once()->with('jane@example.test')->andReturn([]);
+        $userRepositoryMock->shouldReceive('insertUser')->once()->with([
             'name' => 'jane doe',
             'email' => 'jane@example.test',
             'password' => 'securepassword'
@@ -60,7 +60,7 @@ class UserControllerTest extends TestCase
             'email' => 'jane@example.test'
         ]);
 
-        $this->app->instance(UserModelInterface::class, $userModelMock);
+        $this->app->instance(UserRepositoryInterface::class, $userRepositoryMock);
         $service = $this->app->make(\App\Services\UserService::class);
         $result = $service->insertUser([
             'name' => 'jane doe',
@@ -78,14 +78,14 @@ class UserControllerTest extends TestCase
     {
         $this->expectException(\App\Exceptions\RecursoDuplicadoException::class);
 
-        $userModelMock = Mockery::mock(UserModelInterface::class);
-        $userModelMock->shouldReceive('getUserByEmail')->once()->with('jane@example.test')->andReturn([
+        $userRepositoryMock = Mockery::mock(UserRepositoryInterface::class);
+        $userRepositoryMock->shouldReceive('getUserByEmail')->once()->with('jane@example.test')->andReturn([
             'id' => 1,
             'name' => 'jane doe',
             'email' => 'jane@example.test'
         ]);
 
-        $this->app->instance(UserModelInterface::class, $userModelMock);
+        $this->app->instance(UserRepositoryInterface::class, $userRepositoryMock);
         $service = $this->app->make(\App\Services\UserService::class);
 
         $service->insertUser([
@@ -97,16 +97,16 @@ class UserControllerTest extends TestCase
 
     public function test_service_updateUser_returns_array_on_success(): void 
     {
-        $userModelMock = Mockery::mock(UserModelInterface::class);
-        $userModelMock->shouldReceive('getUserById')->once()->with(1)->andReturn([
+        $userRepositoryMock = Mockery::mock(UserRepositoryInterface::class);
+        $userRepositoryMock->shouldReceive('getUserById')->once()->with(1)->andReturn([
             'id' => 1,
             'name' => 'jane',
             'email' => 'jane@example.test'
         ]);
         
-        $userModelMock->shouldReceive('updateUser')->once()->with(1, 'jane doe', 'jane@example.test')->andReturn(true);
+        $userRepositoryMock->shouldReceive('updateUser')->once()->with(1, 'jane doe', 'jane@example.test')->andReturn(true);
 
-        $this->app->instance(UserModelInterface::class, $userModelMock);
+        $this->app->instance(UserRepositoryInterface::class, $userRepositoryMock);
         $service = $this->app->make(\App\Services\UserService::class);
         $result = $service->updateUser([
             'id' => 1,
@@ -125,10 +125,10 @@ class UserControllerTest extends TestCase
     {
         $this->expectException(\App\Exceptions\RecursoNaoEncontradoException::class);
 
-        $userModelMock = Mockery::mock(UserModelInterface::class);
-        $userModelMock->shouldReceive('getUserById')->once()->with(1)->andReturn([]);
+        $userRepositoryMock = Mockery::mock(UserRepositoryInterface::class);
+        $userRepositoryMock->shouldReceive('getUserById')->once()->with(1)->andReturn([]);
 
-        $this->app->instance(UserModelInterface::class, $userModelMock);
+        $this->app->instance(UserRepositoryInterface::class, $userRepositoryMock);
         $service = $this->app->make(\App\Services\UserService::class);
 
         $service->updateUser([
@@ -143,19 +143,19 @@ class UserControllerTest extends TestCase
     {
         $this->expectException(\App\Exceptions\RecursoDuplicadoException::class);
 
-        $userModelMock = Mockery::mock(UserModelInterface::class);
-        $userModelMock->shouldReceive('getUserById')->once()->with(1)->andReturn([
+        $userRepositoryMock = Mockery::mock(UserRepositoryInterface::class);
+        $userRepositoryMock->shouldReceive('getUserById')->once()->with(1)->andReturn([
             'id' => 1,
             'name' => 'jane doe',
             'email' => 'jane999999@example.test'
         ]);
-        $userModelMock->shouldReceive('verifyNewEmailIsAvailable')->once()->with('jane999999@example.test', 'jane@example.test', 1)->andReturn([
+        $userRepositoryMock->shouldReceive('verifyNewEmailIsAvailable')->once()->with('jane999999@example.test', 'jane@example.test', 1)->andReturn([
             'id' => 5,
             'name' => 'jane doe hughes',
             'email' => 'jane@example.test'
         ]);
 
-        $this->app->instance(UserModelInterface::class, $userModelMock);
+        $this->app->instance(UserRepositoryInterface::class, $userRepositoryMock);
         $service = $this->app->make(\App\Services\UserService::class);
 
         $service->updateUser([
@@ -168,15 +168,15 @@ class UserControllerTest extends TestCase
 
     public function test_deleteUserById_returns_true_on_success(): void
     {
-        $userModelMock = Mockery::mock(UserModelInterface::class);
-        $userModelMock->shouldReceive('getUserById')->once()->with(1)->andReturn([
+        $userRepositoryMock = Mockery::mock(UserRepositoryInterface::class);
+        $userRepositoryMock->shouldReceive('getUserById')->once()->with(1)->andReturn([
             'id' => 1,
             'name' => 'jane doe',
             'email' => 'jane@example.test'
         ]);
-        $userModelMock->shouldReceive('deleteUserById')->once()->with(1)->andReturn(true);
+        $userRepositoryMock->shouldReceive('deleteUserById')->once()->with(1)->andReturn(true);
 
-        $this->app->instance(UserModelInterface::class, $userModelMock);
+        $this->app->instance(UserRepositoryInterface::class, $userRepositoryMock);
         $service = $this->app->make(\App\Services\UserService::class);
 
         $result = $service->deleteUserById(1);

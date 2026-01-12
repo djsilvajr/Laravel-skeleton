@@ -264,7 +264,7 @@ paths:
                             example: POST
 
   #Usuario
-  /api/user:
+  /api/v1/user:
     post:
       tags:
         - USUARIO
@@ -411,7 +411,7 @@ paths:
                     items: {}
                     example: []
 
-  /api/user/{id}:
+  /api/v1/user/{id}:
     get:
       tags:
         - USUARIO

@@ -1,164 +1,149 @@
 <?php
-
 namespace App\Models;
 
-use App\Exceptions\ErroDePersistenciaException;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-use App\Models\Contracts\UserModelInterface;
-
-class UserModel implements UserModelInterface
+class User extends Authenticatable implements JWTSubject
 {
-    protected $table = 'users';
+    use HasFactory, Notifiable;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'email_verified_at',
+    ];
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
     protected $hidden = [
         'password',
         'remember_token',
-        'created_at',
-        'updated_at',
     ];
-    
-    public function getUserById(int $id) : array {
-        $retorno = [];
-        $usuario = [];
 
-        try {
-            $usuario = DB::table('users')
-                ->select('id', 'name', 'email')
-                ->where('id', $id)
-                ->first();
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
-        
-        if (!empty($usuario)) {
-            $retorno = [
-                'id' => $usuario->id,
-                'name' => $usuario->name,
-                'email' => $usuario->email
-            ];
-        }
-
-        return $retorno;
-    }
-
-    public function getUserByEmail(string $email) : array {
-        $retorno = [];
-        $usuario = [];
-        try {
-            $usuario = DB::table('users')
-                ->select('id', 'name', 'email')
-                ->where('email', $email)
-                ->first();
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
-
-        if (!empty($usuario)) {
-            $retorno = [
-                'id' => $usuario->id,
-                'name' => $usuario->name,
-                'email' => $usuario->email
-            ];
-        }
-
-        return $retorno;
-    }
-
-    public function insertUser(array $data) : array {
-        try {
-            $id = DB::table('users')->insertGetId([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-                'created_at' => now(),
-                'updated_at' => now()
-            ]);
-        } catch (\Throwable $th) {
-            //throw $th;
-            throw new ErroDePersistenciaException();
-        }  
-
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
         return [
-            'id' => $id,
-            'name' => $data['name'],
-            'email' => $data['email']
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
         ];
     }
 
-    public function verifyNewEmailIsAvailable(string $oldEmail, string $newEmail, int $id) : array {
-        $retorno = [];
-        $usuario = [];
-
-        try {
-            $usuario = DB::table('users')
-                ->select('id', 'name', 'email')
-                ->where('email', $newEmail)
-                ->where('id', '<>', $id)
-                ->first();
-        } catch (\Throwable $e) {
-            //Log::error('verifyNewEmailIsAvailable failed', ['oldEmail' => $oldEmail, 'newEmail' => $newEmail, 'id' => $id, 'error' => $e->getMessage()]);
-        }
-
-        if (!empty($usuario)) {
-            $retorno = [
-                'id' => $usuario->id,
-                'name' => $usuario->name,
-                'email' => $usuario->email
-            ];
-        }
-
-        return $retorno;
+    /**
+     * Get the identifier that will be stored in the subject claim of the JWT.
+     *
+     * @return mixed
+     */
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
     }
 
-    public function updateUser(int $id, string $name, string $email) : bool {
-        try {
-            $update = DB::table('users')
-                ->where('id', $id)
-                ->update([
-                    'name'       => $name,
-                    'email'      => $email,
-                    'updated_at' => now(),
-                ]);
-
-            if(!$update) {
-                return false;
-            }
-
-            return true;
-        } catch (\Throwable $e) {
-            //Log::error('updateUser failed', ['id' => $id, 'error' => $e->getMessage()]);
-            return false;
-        }
-    }  
-    
-    public function deleteUserById(int $id) : bool {
-        try {
-            $delete = DB::table('users')
-                ->where('id', $id)
-                ->delete();
-
-            if(!$delete) {
-                return false;
-            }
-
-            return true;
-        } catch (\Throwable $e) {
-            //Log::error('updateUser failed', ['id' => $id, 'error' => $e->getMessage()]);
-            return false;
-        }
+    /**
+     * Return a key value array, containing any custom claims to be added to the JWT.
+     *
+     * @return array
+     */
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 
-    public static function isAdmin(int $id): bool {
-        $user = DB::table('users')
-            ->select('is_admin')
-            ->where('id', $id)
-            ->first();
-
-        if ($user && $user->is_admin === 'Y') {
-            return true; // Usuário é admin
-        }
-
-        return false; // Usuário não é admin
+    /**
+     * Verifica se o email foi verificado.
+     *
+     * @return bool
+     */
+    public function hasVerifiedEmail(): bool
+    {
+        return ! is_null($this->email_verified_at);
     }
+
+    /**
+     * Marca o email como verificado.
+     *
+     * @return bool
+     */
+    public function markEmailAsVerified(): bool
+    {
+        return $this->forceFill([
+            'email_verified_at' => $this->freshTimestamp(),
+        ])->save();
+    }
+
+    // ==========================================
+    // SCOPES (Filtros reutilizáveis)
+    // ==========================================
+
+    /**
+     * Scope para filtrar usuários com email verificado.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeVerified($query)
+    {
+        return $query->whereNotNull('email_verified_at');
+    }
+
+    /**
+     * Scope para filtrar usuários sem email verificado.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeUnverified($query)
+    {
+        return $query->whereNull('email_verified_at');
+    }
+
+    /**
+     * Scope para buscar por email.
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @param string $email
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeByEmail($query, string $email)
+    {
+        return $query->where('email', $email);
+    }
+
+    // ==========================================
+    // RELATIONSHIPS (Exemplos - ajuste conforme seu projeto)
+    // ==========================================
+
+    /**
+     * Relacionamento com posts (exemplo).
+     * Descomente e ajuste conforme necessário.
+     */
+    // public function posts()
+    // {
+    //     return $this->hasMany(Post::class);
+    // }
+
+    /**
+     * Relacionamento com perfil (exemplo).
+     * Descomente e ajuste conforme necessário.
+     */
+    // public function profile()
+    // {
+    //     return $this->hasOne(Profile::class);
+    // }
 }

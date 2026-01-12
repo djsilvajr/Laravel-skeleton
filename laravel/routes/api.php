@@ -17,12 +17,11 @@ Route::middleware([ApiAuthenticate::class])->group(function () {
     Route::get('/user/self', [AuthController::class, 'consultarLogin']);
 
     //usuarios
-    Route::post('/user', [UserController::class, 'insertUser']);
-    Route::get('/user/{id}', [UserController::class, 'getUserById']);
-    Route::put('/user/{id}', [UserController::class, 'putUserById']);
-    Route::delete('/user/{id}', [UserController::class, 'deleteUserById']);
-    Route::patch('/user/{id}', [UserController::class, 'patchUserById']);
-
+    Route::post('v1/user', [UserController::class, 'insertUser']);
+    Route::get('v1/user/{id}', [UserController::class, 'getUserById']);
+    Route::put('v1/user/{id}', [UserController::class, 'putUserById']);
+    Route::delete('v1/user/{id}', [UserController::class, 'deleteUserById']);
+    Route::patch('v1/user/{id}', [UserController::class, 'patchUserById']);
     //cache
     Route::post('/cache', [CacheController::class, 'store']);
     Route::get('/cache/{key}', [CacheController::class, 'show']);

@@ -3,8 +3,7 @@
 namespace App\Services;
 
 use App\Exceptions\ErroDePersistenciaException;
-use App\Models\UserModel;
-use App\Models\Contracts\UserModelInterface;
+use App\Repository\Contracts\UserRepositoryInterface;
 
 use App\Exceptions\RecursoNaoEncontradoException;
 use App\Exceptions\RecursoDuplicadoException;
@@ -12,16 +11,16 @@ use App\Exceptions\RecursoDuplicadoException;
 class UserService
 {
 
-    protected UserModelInterface $userModel;
+    protected UserRepositoryInterface $userRepository;
 
-    public function __construct(UserModelInterface $userModel)
+    public function __construct(UserRepositoryInterface $userRepository)
     {
-        $this->userModel = $userModel;
+        $this->userRepository = $userRepository;
     }
 
     public function getUserById(int $id) : array
     {
-        $user = $this->userModel->getUserById($id);
+        $user = $this->userRepository->getUserById($id);
         if (empty($user)) {
             throw new RecursoNaoEncontradoException("Usuário não encontrado.", ['ID não identificado']);
         }
@@ -37,7 +36,7 @@ class UserService
 
     public function insertUser(array $credentials) : array {
         $this->verifyEmailIsAvailable($credentials['email']);
-        $addition = $this->userModel->insertUser($credentials);
+        $addition = $this->userRepository->insertUser($credentials);
         return [
             'id' => $addition['id'],
             'user' => $addition['name'],
@@ -46,7 +45,7 @@ class UserService
     }
 
     private function verifyEmailIsAvailable(string $email) : void {
-        $user = $this->userModel->getUserByEmail($email);
+        $user = $this->userRepository->getUserByEmail($email);
         if(!empty($user)) {
             throw new RecursoDuplicadoException("Duplicidade identificada.", [
                 'Email já cadastrado.'
@@ -57,7 +56,7 @@ class UserService
     public function updateUser(array $credentials) : array {
         //$this->checkUserExistById($credentials['id']);
         $this->checkNewUserEmailIsAvailable($credentials['id'], $credentials['email']);
-        $update = $this->userModel->updateUser($credentials['id'], $credentials['name'], $credentials['email']);
+        $update = $this->userRepository->updateUser($credentials['id'], $credentials['name'], $credentials['email']);
         if(!$update) {
             throw new ErroDePersistenciaException();
         }
@@ -65,14 +64,14 @@ class UserService
     }
 
     private function checkUserExistById(int $id) : void {
-        $user = $this->userModel->getUserById($id);
+        $user = $this->userRepository->getUserById($id);
         if (!$user) {
             throw new RecursoNaoEncontradoException("Usuário não encontrado.", ['ID não identificado']);
         }
     }
 
     private function checkNewUserEmailIsAvailable(int $id, string $newEmail) : void {
-        $user = $this->userModel->getUserById($id);
+        $user = $this->userRepository->getUserById($id);
         if (!$user) {
             throw new RecursoNaoEncontradoException("Usuário não encontrado.", ['ID não identificado']);
         }
@@ -83,7 +82,7 @@ class UserService
     }
 
     private function verifyNewEmailIsAvailable(string $oldEmail, string $newEmail, $id) : void {
-        $user = $this->userModel->verifyNewEmailIsAvailable($oldEmail, $newEmail, $id);
+        $user = $this->userRepository->verifyNewEmailIsAvailable($oldEmail, $newEmail, $id);
         if(!empty($user)) {
             throw new RecursoDuplicadoException("Request inválido.", [
                 'Email já cadastrado.'
@@ -93,7 +92,7 @@ class UserService
 
     public function deleteUserById(int $id) : bool{
         $this->checkUserExistById($id);
-        $excluir = $this->userModel->deleteUserById($id);
+        $excluir = $this->userRepository->deleteUserById($id);
         if(!$excluir) {
             throw new ErroDePersistenciaException();
         }

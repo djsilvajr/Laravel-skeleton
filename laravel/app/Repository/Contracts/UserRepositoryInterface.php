@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Models\Contracts;
+namespace App\Repository\Contracts;
 
-interface UserModelInterface
+interface UserRepositoryInterface
 {
     public function getUserById(int $id) : array;
     public function getUserByEmail(string $email) : array;
