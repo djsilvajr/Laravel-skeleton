@@ -20,7 +20,7 @@ class UserRepository implements UserRepositoryInterface
                 ->where('id', $id)
                 ->first();
         } catch (\Throwable $th) {
-            //throw $th;
+            throw new ErroDePersistenciaException();
         }
         
         if (!empty($usuario)) {
@@ -43,7 +43,7 @@ class UserRepository implements UserRepositoryInterface
                 ->where('email', $email)
                 ->first();
         } catch (\Throwable $th) {
-            //throw $th;
+            throw new ErroDePersistenciaException();
         }
 
         if (!empty($usuario)) {
@@ -67,7 +67,6 @@ class UserRepository implements UserRepositoryInterface
                 'updated_at' => now()
             ]);
         } catch (\Throwable $th) {
-            //throw $th;
             throw new ErroDePersistenciaException();
         }  
 
@@ -89,7 +88,7 @@ class UserRepository implements UserRepositoryInterface
                 ->where('id', '<>', $id)
                 ->first();
         } catch (\Throwable $e) {
-            //Log::error('verifyNewEmailIsAvailable failed', ['oldEmail' => $oldEmail, 'newEmail' => $newEmail, 'id' => $id, 'error' => $e->getMessage()]);
+            throw new ErroDePersistenciaException();
         }
 
         if (!empty($usuario)) {
@@ -119,8 +118,7 @@ class UserRepository implements UserRepositoryInterface
 
             return true;
         } catch (\Throwable $e) {
-            //Log::error('updateUser failed', ['id' => $id, 'error' => $e->getMessage()]);
-            return false;
+            throw new ErroDePersistenciaException();
         }
     }  
     
@@ -136,16 +134,19 @@ class UserRepository implements UserRepositoryInterface
 
             return true;
         } catch (\Throwable $e) {
-            //Log::error('updateUser failed', ['id' => $id, 'error' => $e->getMessage()]);
-            return false;
+            throw new ErroDePersistenciaException();
         }
     }
 
-    public static function isAdmin(int $id): bool {
-        $user = DB::table('users')
-            ->select('is_admin')
-            ->where('id', $id)
-            ->first();
+    public function isAdmin(int $id): bool {
+        try {
+            $user = DB::table('users')
+                ->select('is_admin')
+                ->where('id', $id)
+                ->first();
+        } catch (\Throwable $th) {
+            throw new ErroDePersistenciaException();
+        }
 
         if ($user && $user->is_admin === 'Y') {
             return true; // Usuário é admin
