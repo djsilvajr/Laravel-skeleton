@@ -3,7 +3,7 @@ version: '3.8'
 services:
   app:
     build: .
-    container_name: laravel11-skeleton
+    container_name: laravel12-skeleton
     ports:
       - "8020:9000"
     volumes:
@@ -17,7 +17,7 @@ services:
 
   queue:
     build: .
-    container_name: laravel11-queue
+    container_name: laravel12-queue
     volumes:
       - ./laravel:/var/www/laravel
     depends_on:
@@ -28,7 +28,7 @@ services:
 
   db:
     image: mysql:8.0
-    container_name: laravel11-skeleton-db
+    container_name: laravel12-skeleton-db
     restart: always
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
