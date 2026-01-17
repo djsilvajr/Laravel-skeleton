@@ -26,6 +26,19 @@ services:
       - laravelSkeleton
     command: sh -c "php artisan queue:work --queue=emails,default" 
 
+  scheduler:
+    build: .
+    volumes:
+      - ./laravel:/var/www/laravel
+    command: >
+      sh -c "while true;
+      do
+        php artisan schedule:run --no-interaction;
+        sleep 60;
+      done"
+    networks:
+      - laravelSkeleton
+
   db:
     image: mysql:8.0
     container_name: laravel12-skeleton-db

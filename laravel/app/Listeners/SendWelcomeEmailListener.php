@@ -6,7 +6,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
 use App\Events\UserRegistered;
-use App\Jobs\SendWelcomeEmailJob;
+use App\Jobs\Queue\SendWelcomeEmailJob;
 use App\Models\FeatureFlagModel;
 
 class SendWelcomeEmailListener
