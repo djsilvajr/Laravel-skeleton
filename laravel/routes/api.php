@@ -3,13 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CacheController;
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Middleware\ApiAuthenticate;
 
 //login
 Route::post('/login', [AuthController::class, 'login']);
 //Authentication required
-Route::middleware([ApiAuthenticate::class])->group(function () {
+Route::middleware('api.stack')->group(function () {
     //Login
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user/self', [AuthController::class, 'checkAuth']);

@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
+
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+use App\Http\Controllers\Controller;
 use App\Exceptions\InvalidCredentialsException;
 use App\Http\Requests\LoginRequest;
 use App\Models\AuthModel;
@@ -43,7 +45,7 @@ class AuthController extends Controller
                     'method' => 'POST'
                 ],
                 'user' => [
-                    'href' => url("/user/self"),
+                    'href' => url("/api/user/self"),
                     'method' => 'GET'
                 ]
             ]
@@ -60,13 +62,13 @@ class AuthController extends Controller
             'data' => [],
             '_links' => [
                 'self' => [
-                    'href' => url("/logout"),
+                    'href' => url("/api/logout"),
                 ],
                 'login' => [
-                    'href' => url("/login"),
+                    'href' => url("/api/login"),
                 ],
                 'user' => [
-                    'href' => url("/user/self"),
+                    'href' => url("/api/user/self"),
                 ],
             ]
         ]);
@@ -81,7 +83,7 @@ class AuthController extends Controller
             'data' => auth('api')->user(),
             '_links' => [
                 'self' => [
-                    'href' => url("/user/self"),
+                    'href' => url("/api/user/self"),
                 ],
                 'logout' => [
                     'href' => url("/api/logout"),

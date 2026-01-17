@@ -17,9 +17,24 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->alias([
-            'api' => ApiAuthenticate::class,
-            'web' => WebAuthenticate::class,
+            'api.auth' => ApiAuthenticate::class,
+            'web.auth' => WebAuthenticate::class,
         ]);
+
+        $middleware->group('api.stack', [
+            'api.auth',
+            'throttle:api',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ]);
+
+        $middleware->group('web.stack', [
+            \Illuminate\Session\Middleware\StartSession::class,
+            'web.auth',
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ]);
+        
         //$middleware->append(TraceRequests::class);
     })->withProviders([
         //\App\Providers\TelemetrySdkServiceProvider::class,
