@@ -33,6 +33,7 @@ Este skeleton Laravel fornece uma base sólida para desenvolvimento de aplicaç�
 - ✅ **Dependency Injection** e Service Providers
 - ✅ **Validações customizadas** e Exception Handling
 - ✅ **Ambiente dockerizado** pronto para uso
+- ✅ **Rate Limit** Já implementado com exemplo básico.
 
 ---
 
