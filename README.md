@@ -224,5 +224,11 @@ Este skeleton usa configurações simplificadas para desenvolvimento. **Antes de
 
 ## Links das aplicações
 
-- [http://localhost:8020/](http://localhost:8020/) Pagina Web Latavel
+- [http://localhost:8080/](http://localhost:8020/) Pagina Web Latavel
+- [http://localhost:8020/api/] Utilizar Backend com swoole separado do front
 - [http://localhost:8020/api/documentation](http://localhost:8020/api/documentation) Swagger
+
+
+```
+O projeto não tem exemplos com swoole, apenas roda com ele. O projeto foi feito pensando em aplicações que mantem o processo vivo, então não teremos nenhuma função guardando valor dentro do projeto de maneira que afete o resto do sistema e acabe acontecendo um erro fantasma de memory leak. Nem tudo é necessário usar swoole, sinta-se a vontade para usar como um sistema laravel comum, também funciona bem e está estruturado para os 2 casos, apenas lembre de mudar a execução no docker-compose se quiser, se este for o seu caso, não precisa separar por processo a api do front-end.
+```
