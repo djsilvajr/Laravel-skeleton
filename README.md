@@ -10,7 +10,7 @@
 ![Redis](https://img.shields.io/badge/Cache-Redis-DC382D?logo=redis&logoColor=white)
 ![Swagger](https://img.shields.io/badge/API-Swagger-85EA2D?logo=swagger&logoColor=black)
 
-> Esqueleto de projeto laravel utilizando octane + swoole com rotas de autenticação + usuarios bem definidas + testes funcionais e unitarios mockery e provider como exemplo.  
+> Esqueleto de projeto laravel utilizando octane + swoole com rotas de autenticação + usuários bem definidas + testes funcionais e unitarios mockery e provider como exemplo.  
 
 > ⚠️ **IMPORTANTE**: Este é um projeto skeleton/boilerplate configurado para **ambiente de desenvolvimento**. 
 > As configurações de segurança estão simplificadas para facilitar o setup inicial.
@@ -190,8 +190,7 @@ php artisan octane:start --server=swoole --host=0.0.0.0 --port=9000 --watch
 
 - [ ] Clonar o repo  
 - [ ] `cp laravel/.env.example laravel/.env`  
-- [ ] Subir containers com `docker compos
-e up -d`  
+- [ ] Subir containers com `docker compose up -d`  
 - [ ] Acessar container `docker exec -it laravel11-skeleton bash`  
 - [ ] Gerar `APP_KEY` e `JWT_SECRET`  
 - [ ] Rodar `php artisan migrate --seed`  
@@ -224,11 +223,32 @@ Este skeleton usa configurações simplificadas para desenvolvimento. **Antes de
 
 ## Links das aplicações
 
-- [http://localhost:8080/](http://localhost:8020/) Pagina Web Latavel
+- [http://localhost:8080/](http://localhost:8020/) Pagina Web Laravel
 - [http://localhost:8020/api/] Utilizar Backend com swoole separado do front
 - [http://localhost:8020/api/documentation](http://localhost:8020/api/documentation) Swagger
 
 
+## ❌ Quando NÃO usar Octane/Swoole
+
+Não use Octane se:
+
+- [ ] Seu projeto é CRUD simples
+- [ ] Não há carga concorrente
+- [ ] Equipe não entende processo vivo
+
+## 🔧 Arquitetura de execução
+
+- Web (Blade): request-response tradicional
+- API: processo persistente (Octane/Swoole)
+
 ```
 O projeto não tem exemplos com swoole, apenas roda com ele. O projeto foi feito pensando em aplicações que mantem o processo vivo, então não teremos nenhuma função guardando valor dentro do projeto de maneira que afete o resto do sistema e acabe acontecendo um erro fantasma de memory leak. Nem tudo é necessário usar swoole, sinta-se a vontade para usar como um sistema laravel comum, também funciona bem e está estruturado para os 2 casos, apenas lembre de mudar a execução no docker-compose se quiser, se este for o seu caso, não precisa separar por processo a api do front-end.
+
+Estado permitido:
+
+- dependências
+- configurações imutáveis
+- cache externo (Redis)
+
 ```
+
