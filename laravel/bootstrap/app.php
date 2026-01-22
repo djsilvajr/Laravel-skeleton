@@ -7,6 +7,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\TraceRequests;
 use App\Http\Middleware\ApiAuthenticate;
 use App\Http\Middleware\WebAuthenticate;
+use App\Http\Middleware\CheckUserPermission;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -19,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'api.auth' => ApiAuthenticate::class,
             'web.auth' => WebAuthenticate::class,
+            'api.permission' => CheckUserPermission::class,
         ]);
 
         $middleware->group('api.stack', [

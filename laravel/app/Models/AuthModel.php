@@ -34,4 +34,24 @@ class AuthModel extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(
+            RolesModel::class, 
+            'role_user',       // Tabela pivot
+            'user_id',         // Chave neste model (user)
+            'role_id'          // Chave no model relacionado (roles)
+        );
+    }
+
+    public function hasPermission($permissionName)
+    {
+        foreach ($this->roles as $role) {
+            if ($role->hasPermission($permissionName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

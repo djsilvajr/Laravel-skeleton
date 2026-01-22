@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CacheController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Middleware\ApiAuthenticate;
 
 //login
 Route::post('/login', [AuthController::class, 'login']);
@@ -17,7 +16,7 @@ Route::middleware('api.stack')->group(function () {
     Route::post('v1/user', [UserController::class, 'insertUser']);
     Route::get('v1/user/{id}', [UserController::class, 'getUserById']);
     Route::put('v1/user/{id}', [UserController::class, 'putUserById']);
-    Route::delete('v1/user/{id}', [UserController::class, 'deleteUserById']);
+    Route::delete('v1/user/{id}', [UserController::class, 'deleteUserById'])->middleware('api.permission:user.delete');
     Route::patch('v1/user/{id}', [UserController::class, 'patchUserById']);
     //Cache
     Route::post('/cache', [CacheController::class, 'store']);

@@ -13,5 +13,18 @@ class RolesModel extends Model
         'description',
     ];
 
+    public function permissions()
+    {
+        return $this->belongsToMany(
+            PermissionModel::class, 
+            'permission_role',   
+            'role_id',         
+            'permission_id'      
+        );
+    }
 
+    public function hasPermission($permissionName)
+    {
+        return $this->permissions->contains('name', $permissionName);
+    }
 }
