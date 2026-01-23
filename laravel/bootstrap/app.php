@@ -8,6 +8,7 @@ use App\Http\Middleware\TraceRequests;
 use App\Http\Middleware\ApiAuthenticate;
 use App\Http\Middleware\WebAuthenticate;
 use App\Http\Middleware\CheckUserPermission;
+use GPBMetadata\Opentelemetry\Proto\Trace\V1\Trace;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -21,12 +22,14 @@ return Application::configure(basePath: dirname(__DIR__))
             'api.auth' => ApiAuthenticate::class,
             'web.auth' => WebAuthenticate::class,
             'api.permission' => CheckUserPermission::class,
+            'trace.request' => TraceRequests::class,
         ]);
 
         $middleware->group('api.stack', [
             'api.auth',
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            'trace.request'
         ]);
 
         $middleware->group('web.stack', [
@@ -34,12 +37,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'web.auth:web',
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,    
         ]);
         
         //$middleware->append(TraceRequests::class);
     })->withProviders([
-        //\App\Providers\TelemetrySdkServiceProvider::class,
+        \App\Providers\TelemetrySdkServiceProvider::class,
         \App\Providers\AppServiceProvider::class,
     ])
     ->withExceptions(function (Exceptions $exceptions): void {

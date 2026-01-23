@@ -2,12 +2,12 @@
 
 ## 📋 Índice
 
-- [Versões Suportadas](#versões-suportadas)
-- [Reportando uma Vulnerabilidade](#reportando-uma-vulnerabilidade)
-- [Políticas de Segurança](#políticas-de-segurança)
-- [Checklist de Segurança](#checklist-de-segurança)
-- [Configurações de Segurança](#configurações-de-segurança)
-- [Boas Práticas](#boas-práticas)
+- [Versões Suportadas](#-versões-suportadas)
+- [Reportando uma Vulnerabilidade](#-reportando-uma-vulnerabilidade)
+- [Políticas de Segurança](#-políticas-de-segurança)
+- [Checklist de Segurança](#-checklist-de-segurança)
+- [Configurações de Segurança](#-configurações-de-segurança)
+- [Boas Práticas](#-boas-práticas)
 
 ---
 
@@ -23,8 +23,13 @@ Este projeto atualmente suporta as seguintes versões com atualizações de segu
 **Dependências Principais:**
 - Laravel:  ^12.0
 - PHP: ^8.2
+- laravel/octane: ^2.13
+- open-telemetry/sdk: ^1.7
+- open-telemetry/exporter-otlp: ^1.3
+- spatie/laravel-open-telemetry: ^0.0.11
 - JWT Auth: ^2.2
-- Laravel Octane: ^2.13
+- darkaonline/l5-swagger: ^9.0
+- phpunit/phpunit: ^11.5
 
 ---
 
@@ -86,8 +91,8 @@ Por favor, aguarde nossa correção antes de divulgar publicamente. Agradecemos 
 
 - ✅ Autenticação dual:  JWT (API) e Session (Web)
 - ✅ Tokens JWT com expiração configurável
-- ✅ Middleware de autenticação em todas as rotas protegidas
-- ✅ Validação de permissões no nível do Service
+- ✅ Rate limit para até 60 requisições no periodo de 1 minuto no middleware de CheckUserPermission
+- ✅ Permissão de usuario já configurada por tabela, registrado em uma migration/seeder exemplo na rota DELETE de users na API
 
 ### **2. Validação de Dados**
 
@@ -129,15 +134,6 @@ Por favor, aguarde nossa correção antes de divulgar publicamente. Agradecemos 
 
 ---
 
-## 📚 Recursos Adicionais
-
-- [Laravel Security Documentation](https://laravel.com/docs/security)
-- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
-- [PHP Security Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/PHP_Configuration_Cheat_Sheet.html)
-- [JWT Best Practices](https://tools.ietf.org/html/rfc8725)
-
----
-
 ## 📞 Contato
 
 Para questões de segurança, entre em contato:
@@ -153,4 +149,4 @@ Este documento está licenciado sob [MIT License](LICENSE).
 
 ---
 
-**Última atualização:** 2026-01-12
+**Última atualização:** 2026-01-23

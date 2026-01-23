@@ -9,12 +9,14 @@
 ![JWT](https://img.shields.io/badge/Auth-JWT-000000?logo=jsonwebtokens&logoColor=white)
 ![Redis](https://img.shields.io/badge/Cache-Redis-DC382D?logo=redis&logoColor=white)
 ![Swagger](https://img.shields.io/badge/API-Swagger-85EA2D?logo=swagger&logoColor=black)
+![Jaeger](https://img.shields.io/badge/Tracing-Jaeger%20%2F%20OpenTelemetry-00A1C9?logo=opentelemetry&logoColor=white)
 
-> Esqueleto de projeto laravel utilizando octane + swoole com rotas de autenticação + usuários bem definidas + testes funcionais e unitarios mockery e provider como exemplo.  
+> Esqueleto de projeto laravel utilizando repository pattern com octane + swoole + Jeager(opentelemetry) + testes funcionais/unitarios com mockery + dupla autenticação configurada (JWT para API / Session para WEB) + redis + queue + scheduler + events + demonstração envio de email + regra de usuários + rate limit + swagger.  
 
 > ⚠️ **IMPORTANTE**: Este é um projeto skeleton/boilerplate configurado para **ambiente de desenvolvimento**. 
 > As configurações de segurança estão simplificadas para facilitar o setup inicial.
 > **Não use estas configurações em produção sem as devidas alterações de segurança.**
+> ⚠️ **ESTE PROJETO NÃO FOI FEITO PARA INICIANTES, ELE É SOLUÇÃO PARA QUEM QUER FAZER APLICAÇÕES REAIS DE MÉDIO PORTE EM PHP**
 
 ---
 
@@ -29,11 +31,12 @@ Este skeleton Laravel fornece uma base sólida para desenvolvimento de aplicaç�
 - ✅ **Testes unitários e de integração** com Mockery e PHPUnit
 - ✅ **Cache distribuído** com Redis
 - ✅ **Documentação automática** com Swagger/OpenAPI
-- ✅ **Observabilidade** com OpenTelemetry
-- ✅ **Dependency Injection** e Service Providers
-- ✅ **Validações customizadas** e Exception Handling
+- ✅ **Observabilidade** com OpenTelemetry (Jaeger)
+- ✅ **Dependency Injection** Service Providers
+- ✅ **Validações customizadas** Exception Handling
 - ✅ **Ambiente dockerizado** pronto para uso
 - ✅ **Rate Limit** Já implementado com exemplo básico.
+- ✅ **Regras de perfil** Exemplo com rota DELETE de users na API.
 
 ---
 
@@ -43,6 +46,7 @@ Este skeleton Laravel fornece uma base sólida para desenvolvimento de aplicaç�
 /
 ├─ docker-compose.yml        # Orquestração dos serviços
 ├─ README.md                 # Este arquivo
+├─ docker/                   # Configuração do otel-collector + dockerfile
 └─ laravel/                  # Projeto Laravel #1
    ├─ app/
    ├─ bootstrap/
@@ -62,11 +66,6 @@ Este skeleton Laravel fornece uma base sólida para desenvolvimento de aplicaç�
 - [Docker](https://www.docker.com/)  
 - [Docker Compose](https://docs.docker.com/compose/) (v2 recomendado: `docker compose`)  
 
-Se optar por rodar o Laravel **fora do Docker**, também será necessário:  
-- [PHP 8.3+](https://www.php.net/)  
-- [Composer](https://getcomposer.org/)  
-- MySQL 8.0 instalado e configurado  
-
 ---
 
 ## ⚙️ Configuração inicial
@@ -74,6 +73,8 @@ Se optar por rodar o Laravel **fora do Docker**, também será necessário:
 Preencha o COMPOSER_AUTH no docker-compose.yml com um Fine-grained personal access tokens
 
 Na primeira vez que subir o projeto, configure o `.env`:
+
+(OBS): ⚠️ O container de jobs provavelmente vai falhar por não ter banco criado
 
 ```bash
 cd laravel
@@ -93,7 +94,7 @@ docker compose up -d
 Acesse o container da aplicação:
 
 ```bash
-docker exec -it laravel11-skeleton bash
+docker exec -it laravel12-skeleton bash
 ```
 
 E rode:
@@ -114,7 +115,7 @@ php artisan jwt:secret
 > Base **laravel** deve ser criada. Base criada inicialmente no formato **utf8mb4_general_ci**. 
 > **As tabelas e dados iniciais são gerados pelo Laravel** via migrations e seeders.
 
-Ainda dentro do container `laravel11-skeleton`, execute:
+Ainda dentro do container `laravel12-skeleton`, execute:
 
 ```bash
 # Criar tabelas
@@ -130,18 +131,26 @@ Ou, para recriar do zero já com seeds:
 php artisan migrate:fresh --seed
 ```
 
+Ao reiniciar containers os serviços que não subiram vão funcionar.
+
 ---
 
 ## ▶️ Acessando a aplicação
 
-- Laravel rodando: [http://localhost:8020](http://localhost:8020)  
+- API Laravel com swoole rodando: [http://localhost:8020/api](http://localhost:8020/api)  
+- Swagger: [http://localhost:8020/api/documentation](http://localhost:8020/api/documentation)
+- WEB Laravel com artisan serv rodando: [http://localhost:8080](http://localhost:8080)  
 - MySQL: `localhost:3306` (usuário root, sem senha)
+- Redis: Pode acessar pelo container mesmo assim como na configuração do docker compose
+- Jaeger: [http://localhost:16686/search](http://localhost:16686/search)
+- queue/scheduler: Devem ser acessados pelo container, pode ver com ``` docker ps ```
+
 
 ---
 
 ## 🧩 Comandos úteis
 
-Dentro do container `laravel11-skeleton`:
+Dentro do container `laravel12-skeleton`:
 
 ```bash
 # Instalar dependências
@@ -153,36 +162,31 @@ php artisan config:clear
 
 # Rodar servidor embutido (já configurado no docker-compose)
 php artisan octane:start --server=swoole --host=0.0.0.0 --port=9000
+
+#Carregar workers novamente.
+php artisan octane:reload 
 ```
 
 
 ## ▶️ Desenvolvendo com SWOOLE
 > O Swoole executa aplicações PHP em um **runtime persistente escrito em C**, mantendo o código carregado em memória e evitando o bootstrap do Laravel a cada requisição.
 > Isso traz ganhos significativos de performance, porém exige atenção durante o desenvolvimento, pois alterações no código **não são recarregadas automaticamente** por padrão.
-> Se estiver em ambiente de desenvolvimento e precisar refletir alterações no código, utilize **uma das opções abaixo**.
+> Se estiver em ambiente de desenvolvimento e precisar refletir alterações no código lembre:
 
 ### 1.
 
 Entre no container com:
 
 ```bash
-docker exec -it laravel11-skeleton bash
+docker exec -it laravel12-skeleton bash
 ```
 
+### 2.
 Recarregue os workers do octane.
 
 ```bash
 php artisan octane:reload
 ```
-
-### 2.
-
-Rode o projeto locamente utilizando --watch (O docker não funciona o --watch corretamente, depende de eventos de filesystem).
-
-```bash
-php artisan octane:start --server=swoole --host=0.0.0.0 --port=9000 --watch
-```
-
 
 ---
 
@@ -191,12 +195,12 @@ php artisan octane:start --server=swoole --host=0.0.0.0 --port=9000 --watch
 - [ ] Clonar o repo  
 - [ ] `cp laravel/.env.example laravel/.env`  
 - [ ] Subir containers com `docker compose up -d`  
-- [ ] Acessar container `docker exec -it laravel11-skeleton bash`  
+- [ ] Acessar container `docker exec -it laravel12-skeleton bash`  
 - [ ] Gerar `APP_KEY` e `JWT_SECRET`  
 - [ ] Rodar `php artisan migrate --seed`  
-- [ ] Testar em [http://localhost:8020](http://localhost:8020)  
+- [ ] Testar em [http://localhost:8080](http://localhost:8080) ou tentar acessar o banco localmente. 
 
-Pronto 🎉 Sua aplicação Laravel estará rodando com banco de dados populado!
+Pronto 🎉 Sua aplicação Laravel de auto desempenho estará rodando com banco de dados populado!
 
 ---
 
@@ -219,13 +223,6 @@ Este skeleton usa configurações simplificadas para desenvolvimento. **Antes de
 - [ ] Remover ou proteger a rota `/api/documentation` do Swagger
 
 ---
-
-
-## Links das aplicações
-
-- [http://localhost:8080/](http://localhost:8020/) Pagina Web Laravel
-- [http://localhost:8020/api/] Utilizar Backend com swoole separado do front
-- [http://localhost:8020/api/documentation](http://localhost:8020/api/documentation) Swagger
 
 
 ## ❌ Quando NÃO usar Octane/Swoole
