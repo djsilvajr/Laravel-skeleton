@@ -249,3 +249,70 @@ Estado permitido:
 
 ```
 
+## ⚙️ .ENV
+
+### 1. Importante mudar região para ver scheduler funcionando.
+```
+APP_TIMEZONE=UTC
+APP_LOCALE=en
+APP_FALLBACK_LOCALE=en
+APP_FAKER_LOCALE=en_US
+```
+
+### 2. Já está alinhado com o docker-compose, lembre apenas de criar o bd
+```
+DB_CONNECTION=mysql
+DB_HOST=db
+DB_PORT=3306
+DB_DATABASE=laravel
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 3. Aqui é onde guarda tudo referente a Session, Jobs e cache (O redis é usado do mesmo jeito que foi feito na Service RedisService)
+```
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+SESSION_ENCRYPT=false
+SESSION_PATH=/
+SESSION_DOMAIN=null
+
+CACHE_STORE=database
+CACHE_DRIVER=database
+```
+
+### 4. Config do redis
+```
+REDIS_CLIENT=phpredis
+REDIS_HOST=redis
+REDIS_PASSWORD=bananinha123
+REDIS_PORT=6379
+REDIS_DB=0
+```
+
+### 5. Config do Email
+
+OBS: MAIL_PASSWORD=null - este campo não é a senha do seu email, é uma senha especifica para poder usar o smtp.
+```
+MAIL_MAILER=smtp
+MAIL_SCHEME=null
+MAIL_HOST=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USERNAME=null
+MAIL_PASSWORD=null
+MAIL_ENCRYPTION=tls
+MAIL_FROM_ADDRESS="seu@email.com"
+MAIL_FROM_NAME="${APP_NAME}"
+```
+
+### 6. Observabilidade
+
+Se quiser ligar o Jaeger  mude OTEL_ENABLED para true
+```
+OTEL_SERVICE_NAME=laravel-app
+OTEL_TRACES_EXPORTER=otlp
+OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4318
+OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+OTEL_PHP_AUTOLOAD_ENABLED=true
+OTEL_ENABLED=false
+```
