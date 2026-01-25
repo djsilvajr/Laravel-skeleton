@@ -45,7 +45,8 @@ class TelemetrySdkServiceProvider extends ServiceProvider
 
         $tracerProvider = $this->app->make('otel.sdk');
         $this->app->terminating(function () use ($tracerProvider) {
-            $tracerProvider->shutdown();
+            //$tracerProvider->shutdown();
+            $tracerProvider->forceFlush();
         });
     }
 }
