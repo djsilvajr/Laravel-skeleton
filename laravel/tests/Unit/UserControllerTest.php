@@ -26,7 +26,7 @@ class UserControllerTest extends TestCase
 
         $this->app->instance(UserRepositoryInterface::class, $userRepositoryMock);
         $service = $this->app->make(\App\Services\UserService::class);
-        $result = $service->getUserById(1);
+        $result = $service->getById(1);
         $this->assertIsArray($result);
         $this->assertEquals(1, $result['id']);
         $this->assertEquals('John Doe', $result['name']);
@@ -43,7 +43,7 @@ class UserControllerTest extends TestCase
         $this->app->instance(UserRepositoryInterface::class, $userRepositoryMock);
         $service = $this->app->make(\App\Services\UserService::class);
 
-        $service->getUserById(1); 
+        $service->getById(1); 
     }
 
     public function test_service_insertUser_returns_array_on_success(): void
@@ -62,7 +62,7 @@ class UserControllerTest extends TestCase
 
         $this->app->instance(UserRepositoryInterface::class, $userRepositoryMock);
         $service = $this->app->make(\App\Services\UserService::class);
-        $result = $service->insertUser([
+        $result = $service->insert([
             'name' => 'jane doe',
             'email' => 'jane@example.test',
             'password' => 'securepassword'
@@ -88,7 +88,7 @@ class UserControllerTest extends TestCase
         $this->app->instance(UserRepositoryInterface::class, $userRepositoryMock);
         $service = $this->app->make(\App\Services\UserService::class);
 
-        $service->insertUser([
+        $service->insert([
             'name' => 'jane doe',
             'email' => 'jane@example.test',
             'password' => 'securepassword'
@@ -108,7 +108,7 @@ class UserControllerTest extends TestCase
 
         $this->app->instance(UserRepositoryInterface::class, $userRepositoryMock);
         $service = $this->app->make(\App\Services\UserService::class);
-        $result = $service->updateUser([
+        $result = $service->update([
             'id' => 1,
             'name' => 'jane doe',
             'email' => 'jane@example.test',
@@ -131,7 +131,7 @@ class UserControllerTest extends TestCase
         $this->app->instance(UserRepositoryInterface::class, $userRepositoryMock);
         $service = $this->app->make(\App\Services\UserService::class);
 
-        $service->updateUser([
+        $service->update([
             'id' => 1,
             'name' => 'jane doe',
             'email' => 'jane@example.test',
@@ -158,7 +158,7 @@ class UserControllerTest extends TestCase
         $this->app->instance(UserRepositoryInterface::class, $userRepositoryMock);
         $service = $this->app->make(\App\Services\UserService::class);
 
-        $service->updateUser([
+        $service->update([
             'id' => 1,
             'name' => 'jane doe',
             'email' => 'jane@example.test',
@@ -179,7 +179,7 @@ class UserControllerTest extends TestCase
         $this->app->instance(UserRepositoryInterface::class, $userRepositoryMock);
         $service = $this->app->make(\App\Services\UserService::class);
 
-        $result = $service->deleteUserById(1);
+        $result = $service->delete(1);
         $this->assertTrue($result);
     }
 }
