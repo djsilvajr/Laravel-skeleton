@@ -29,7 +29,7 @@ class UserController extends Controller
         $request->merge(['id' => $id]);
         $credentials = $request->only(['id']);
         GetUserByIdRequest::validate($credentials);
-        $response = $this->userService->getUserById($id);
+        $response = $this->userService->getById($id);
         return response()->json([
             'status' => true,
             'message' => 'User fetched successfully.',
@@ -60,7 +60,7 @@ class UserController extends Controller
         $request->merge(['id' => $id]);
         $credentials = $request->only(['id', 'name', 'email']);
         PutUserByIdRequest::validate($credentials);
-        $response = $this->userService->updateUser($credentials);
+        $response = $this->userService->update($credentials);
 
         return response()->json([
             'status' => true,
@@ -92,7 +92,7 @@ class UserController extends Controller
         $request->merge(['id' => $id]);
         $credentials = $request->only(['id',]);
         DeleteUserByIdRequest::validate($credentials);
-        $response = $this->userService->deleteUserById($credentials['id']);
+        $response = $this->userService->delete($credentials['id']);
         return response()->json([
             'status' => $response,
             'message' => 'User deleted successfully.',
@@ -115,7 +115,7 @@ class UserController extends Controller
     {
         $credentials = $request->only(['name', 'email', 'password']);
         InsertUserRequest::validate($credentials);
-        $response = $this->userService->insertUser($credentials);
+        $response = $this->userService->insert($credentials);
         return response()->json([
             'status' => true,
             'message' => 'User added successfully.',
@@ -144,7 +144,4 @@ class UserController extends Controller
             ]
         ]);
     }
-
-
-
 }

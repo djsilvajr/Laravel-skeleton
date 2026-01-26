@@ -4,14 +4,14 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Events\UserRegistered;
+use App\Events\UserRegisteredSendEmail;
 use App\Listeners\SendWelcomeEmailListener;
 
 class EventServiceProvider extends ServiceProvider
 {
 
     protected $listen = [
-        UserRegistered::class => [
+        UserRegisteredSendEmail::class => [
             SendWelcomeEmailListener::class,
         ],
     ];
