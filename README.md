@@ -316,3 +316,7 @@ OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
 OTEL_PHP_AUTOLOAD_ENABLED=true
 OTEL_ENABLED=false
 ```
+
+## 📄 License
+
+MIT License — veja [LICENSE](LICENSE) para mais detalhes.
