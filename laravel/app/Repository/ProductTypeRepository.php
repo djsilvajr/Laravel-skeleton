@@ -26,4 +26,22 @@ class ProductTypeRepository implements ProductTypeInterface
 
         return $productTypes;
     }
+
+    public function findProductTypeById(int $id): array
+    {
+        $productType = [];
+
+        try {
+            $productType = DB::table('product_types')
+                ->select('id', 'name', 'slug', 'description', 'parent_id', 'variant_type', 'order', 'icon', 'image_url', 'active', 'created_at', 'updated_at')
+                ->where('id', $id)
+                ->get()
+                ->toArray();
+
+        } catch (\Throwable $th) {
+            throw new PersistenceErrorException();
+        }
+
+        return $productType;
+    }
 }
