@@ -843,5 +843,120 @@ paths:
                     items: {}
                     example: []
 
+  # Product Types
+  /api/product/types:
+    get:
+      tags:
+        - PRODUCT TYPES
+      summary: Get all product types
+      description: Retrieves a list of all product types available in the system.
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Product types fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Product types fetched successfully.
+                  errors:
+                    type: array
+                    items: {}
+                    example: []
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        name:
+                          type: string
+                          example: "Roupas"
+                        slug:
+                          type: string
+                          example: "roupas"
+                        description:
+                          type: string
+                          example: "Todas as peças de vestuário"
+                        order:
+                          type: integer
+                          example: 1
+                        icon:
+                          type: string
+                          nullable: true
+                          example: null
+                        image_url:
+                          type: string
+                          nullable: true
+                          example: null
+                        active:
+                          type: integer
+                          example: 1
+                        created_at:
+                          type: string
+                          example: "2026-02-11 10:25:12"
+                        updated_at:
+                          type: string
+                          example: "2026-02-11 10:25:12"
+                    example:
+                      - id: 1
+                        name: "Roupas"
+                        slug: "roupas"
+                        description: "Todas as peças de vestuário"
+                        order: 1
+                        icon: null
+                        image_url: null
+                        active: 1
+                        created_at: "2026-02-11 10:25:12"
+                        updated_at: "2026-02-11 10:25:12"
+                      - id: 10
+                        name: "Eletrônicos"
+                        slug: "eletronicos"
+                        description: "Produtos eletrônicos e tecnologia"
+                        order: 2
+                        icon: null
+                        image_url: null
+                        active: 1
+                        created_at: "2026-02-11 10:25:12"
+                        updated_at: "2026-02-11 10:25:12"
+                      - id: 20
+                        name: "Móveis"
+                        slug: "moveis"
+                        description: "Móveis para casa e escritório"
+                        order: 3
+                        icon: null
+                        image_url: null
+                        active: 1
+                        created_at: "2026-02-11 10:25:12"
+                        updated_at: "2026-02-11 10:25:12"
+                      - id: 30
+                        name: "Livros"
+                        slug: "livros"
+                        description: "Livros e publicações"
+                        order: 4
+                        icon: null
+                        image_url: null
+                        active: 1
+                        created_at: "2026-02-11 10:25:12"
+                        updated_at: "2026-02-11 10:25:12"
+                  _links:
+                    type: object
+                    properties:
+                      self:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: http://localhost:8020/product/types
+
 
 

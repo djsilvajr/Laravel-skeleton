@@ -149,7 +149,7 @@ class ProductTypeSeeder extends Seeder
                 'slug' => 'livros',
                 'description' => 'Livros e publicações',
                 'parent_id' => null,
-                'variant_type' => 'books',
+                'variant_type' => null,
                 'order' => 4,
                 'active' => true,
                 'created_at' => $now,
