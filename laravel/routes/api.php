@@ -25,7 +25,7 @@ Route::middleware('api.stack')->group(function () {
     Route::get('/cache/{key}', [CacheController::class, 'show']);
     Route::delete('/cache/{key}', [CacheController::class, 'destroy']);
     //Product
-    Route::get('/product/types', [ProductTypeController::class, 'getProductTypes']);
+    Route::get('v1/product/types', [ProductTypeController::class, 'getProductTypes']);
 });
     
 

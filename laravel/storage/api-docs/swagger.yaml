@@ -844,7 +844,7 @@ paths:
                     example: []
 
   # Product Types
-  /api/product/types:
+  /api/v1/product/types:
     get:
       tags:
         - PRODUCT TYPES
