@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\ProductTypeController;
 use App\Http\Controllers\Api\CacheController;
 use App\Http\Controllers\Api\AuthController;
 
@@ -22,6 +24,11 @@ Route::middleware('api.stack')->group(function () {
     Route::post('/cache', [CacheController::class, 'store']);
     Route::get('/cache/{key}', [CacheController::class, 'show']);
     Route::delete('/cache/{key}', [CacheController::class, 'destroy']);
+    //Product
+    Route::get('v1/product/types', [ProductTypeController::class, 'getProductTypes']);
+    Route::get('v1/product/type/{id}', [ProductTypeController::class, 'getProductTypeById']);
+    Route::get('v1/product/type/{id}/child', [ProductTypeController::class, 'getChildProductTypesById']);
+    
 });
     
 

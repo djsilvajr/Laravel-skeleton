@@ -1,9 +1,9 @@
-version: '3.8'
+#version: '3.8'
 
 services:
   app:
     build: ./docker/.
-    container_name: laravel12-skeleton
+    container_name: sales-site-laravel12
     ports:
       - "8020:9000"
     environment:
@@ -14,29 +14,30 @@ services:
       db:
         condition: service_healthy
     networks:
-      - laravelSkeleton
-    #command: sh -c "composer install && php artisan serve --host=0.0.0.0 --port=9000"
-    command: sh -c "composer install && php artisan octane:start --server=swoole --host=0.0.0.0 --port=9000"
-
-  app-frontend:
-    build: ./docker/.
-    container_name: laravel12-skeleton-frontend
-    ports:
-      - "8080:9000"
-    environment:
-      - TZ=America/Sao_Paulo
-    volumes:
-      - ./laravel:/var/www/laravel
-    depends_on:
-      db:
-        condition: service_healthy
-    networks:
-      - laravelSkeleton
+      - sales-site-laravel12-network
     command: sh -c "composer install && php artisan serve --host=0.0.0.0 --port=9000"
+    #command: sh -c "composer install && php artisan octane:start --server=swoole --host=0.0.0.0 --port=9000"
+
+
+  # app-frontend:
+  #   build: ./docker/.
+  #   container_name: sales-site-laravel12-frontend
+  #   ports:
+  #     - "8080:9000"
+  #   environment:
+  #     - TZ=America/Sao_Paulo
+  #   volumes:
+  #     - ./laravel:/var/www/laravel
+  #   depends_on:
+  #     db:
+  #       condition: service_healthy
+  #   networks:
+  #     - sales-site-laravel12-network
+  #   command: sh -c "composer install && php artisan serve --host=0.0.0.0 --port=9000"
 
   queue:
     build: ./docker/.
-    container_name: laravel12-queue
+    container_name: sales-site-laravel12-queue
     environment:
       - TZ=America/Sao_Paulo
     volumes:
@@ -45,7 +46,7 @@ services:
       db:
         condition: service_healthy
     networks:
-      - laravelSkeleton
+      - sales-site-laravel12-network
     command: sh -c "php artisan queue:work --queue=emails,default" 
 
   scheduler:
@@ -63,65 +64,75 @@ services:
     depends_on:
       - db
     networks:
-      - laravelSkeleton
+      - sales-site-laravel12-network
 
   db:
     image: mysql:8.0
-    container_name: laravel12-skeleton-db
+    container_name: sales-site-laravel12-db
     restart: always
     environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-      MYSQL_ROOT_PASSWORD: ""
-      TZ: America/Sao_Paulo
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: ${TZ}
     ports:
       - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 5s
       timeout: 3s
       retries: 10
     networks:
-      - laravelSkeleton
+      - sales-site-laravel12-network
 
   redis:
     image: redis:7-alpine
-    container_name: redis-laravel-skeleton
-    command: ["redis-server", "--requirepass", "bananinha123"]
+    container_name: sales-site-laravel12-redis
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
     ports:
       - "6379:6379"
+    volumes:
+      - redis_data:/data
     healthcheck:
-      test: ["CMD", "sh", "-c", "redis-cli -a bananinha123 PING || exit 1"]
+      test: ["CMD", "sh", "-c", "redis-cli -a ${REDIS_PASSWORD} PING || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
     networks:
-      - laravelSkeleton
+      - sales-site-laravel12-network
 
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    container_name: jaeger
-    ports:
-      - "16686:16686" # UI do Jaeger
-      - "4317:4317"   # OTLP gRPC
-      - "4318:4318"   # OTLP HTTP
-    environment:
-      - TZ=America/Sao_Paulo
-    networks:
-      - laravelSkeleton
+  # jaeger:
+  #   image: jaegertracing/all-in-one:latest
+  #   container_name: sales-site-laravel12-jaeger
+  #   ports:
+  #     - "16686:16686" # UI do Jaeger
+  #     - "4317:4317"   # OTLP gRPC
+  #     - "4318:4318"   # OTLP HTTP
+  #   environment:
+  #     - TZ=America/Sao_Paulo
+  #   networks:
+  #     - sales-site-laravel12-network
 
-  otel-collector:
-    image: otel/opentelemetry-collector-contrib:latest
-    container_name: otel-collector
-    environment:
-      - TZ=America/Sao_Paulo
-    volumes:
-      - ./docker/otel-collector:/etc/otel-collector/
-    command: ["--config=/etc/otel-collector/config.yaml"]
-    depends_on:
-      - jaeger
-    networks:
-      - laravelSkeleton
+  # otel-collector:
+  #   image: otel/opentelemetry-collector-contrib:latest
+  #   container_name: sales-site-laravel12-otel-collector
+  #   environment:
+  #     - TZ=America/Sao_Paulo
+  #   volumes:
+  #     - ./docker/otel-collector:/etc/otel-collector/
+  #   command: ["--config=/etc/otel-collector/config.yaml"]
+  #   depends_on:
+  #     - jaeger
+  #   networks:
+  #     - sales-site-laravel12-network
 
+volumes:
+  db_data:
+  redis_data:
+  
 networks:
-  laravelSkeleton:
+  sales-site-laravel12-network:
     driver: bridge
