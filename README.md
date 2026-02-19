@@ -16,7 +16,9 @@
 > ⚠️ **IMPORTANTE**: Este é um projeto skeleton/boilerplate configurado para **ambiente de desenvolvimento**. 
 > As configurações de segurança estão simplificadas para facilitar o setup inicial.
 > **Não use estas configurações em produção sem as devidas alterações de segurança.**
+
 > ⚠️ **ESTE PROJETO NÃO FOI FEITO PARA INICIANTES, ELE É SOLUÇÃO PARA QUEM QUER FAZER APLICAÇÕES REAIS DE MÉDIO PORTE EM PHP**
+
 > ⚠️ **NÃO USO DO SWOOLE**: Caso queira um build mais rapido, pode usar o exemplo da aplicação contruida na branch: e-commerce-exemple-no-swoole**. 
 ---
 
