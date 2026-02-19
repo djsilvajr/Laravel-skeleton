@@ -13,11 +13,21 @@
 
 > Esqueleto de projeto laravel utilizando repository pattern com octane + swoole + Jeager(opentelemetry) + testes funcionais/unitarios com mockery + dupla autenticação configurada (JWT para API / Session para WEB) + redis + queue + scheduler + events + demonstração envio de email + regra de usuários + rate limit + swagger.  
 
+> ⚠️ Branches
+
+- **main** : Trabalho atual com a branch.
+- **1.0** : Primeiro Release do template. Conntem tudo o que o readme promete.
+- **e-commerce-exemple-no-swoole** : Exemplo de aplicação de e-commerce (Sem processo vivo continuo para aqueles que querem usar as funcionalidades que não estão ligadas a ocatane + swoole).
+- **e-commerce-exemple-swoole** : (Em desenvolvimento)
+
+
 > ⚠️ **IMPORTANTE**: Este é um projeto skeleton/boilerplate configurado para **ambiente de desenvolvimento**. 
 > As configurações de segurança estão simplificadas para facilitar o setup inicial.
 > **Não use estas configurações em produção sem as devidas alterações de segurança.**
+
 > ⚠️ **ESTE PROJETO NÃO FOI FEITO PARA INICIANTES, ELE É SOLUÇÃO PARA QUEM QUER FAZER APLICAÇÕES REAIS DE MÉDIO PORTE EM PHP**
 
+> ⚠️ **NÃO USO DO SWOOLE**: Caso queira um build mais rapido, pode usar o exemplo da aplicação contruida na branch: e-commerce-exemple-no-swoole**. 
 ---
 
 ## 🎯 Sobre este projeto
