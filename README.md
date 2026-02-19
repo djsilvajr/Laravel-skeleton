@@ -17,7 +17,9 @@
 
 - **main** : Trabalho atual com a branch.
 - **1.0** : Primeiro Release do template. Conntem tudo o que o readme promete.
-- **e-commerce-exemple-no-swoole** : Exemplo de aplicação de e-commerce.
+- **e-commerce-exemple-no-swoole** : Exemplo de aplicação de e-commerce (Sem processo vivo continuo para aqueles que querem usar as funcionalidades que não estão ligadas a ocatane + swoole).
+- - **e-commerce-exemple-swoole** : (Em desenvolvimento)
+
 
 > ⚠️ **IMPORTANTE**: Este é um projeto skeleton/boilerplate configurado para **ambiente de desenvolvimento**. 
 > As configurações de segurança estão simplificadas para facilitar o setup inicial.
