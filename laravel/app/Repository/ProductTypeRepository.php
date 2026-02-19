@@ -44,4 +44,24 @@ class ProductTypeRepository implements ProductTypeInterface
 
         return $productType;
     }
+
+    public function findChildProductTypesById(int $id): array
+    {
+        $childProductTypes = [];
+
+        try {
+            $childProductTypes = DB::table('product_types')
+                ->select('id', 'name', 'slug', 'description', 'parent_id', 'variant_type', 'order', 'icon', 'image_url', 'active', 'created_at', 'updated_at')
+                ->where('parent_id', $id)
+                ->get()
+                ->toArray();
+
+        } catch (\Throwable $th) {
+            throw new PersistenceErrorException();
+        }
+
+        $childProductTypes = $childProductTypes ?? [];
+        
+        return $childProductTypes;
+    }
 }

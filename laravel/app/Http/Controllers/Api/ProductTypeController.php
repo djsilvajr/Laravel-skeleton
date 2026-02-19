@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\GetProductTypeByIdRequest;
+use App\Http\Requests\GetChildProductTypesByIdRequest;
 
 use App\Services\ProductTypeService;
 
@@ -34,6 +35,9 @@ class ProductTypeController extends Controller
                 'GET' => [
                     'href' => url('v1/product/type/{id}')
                 ],
+                'GET_CHILD' => [
+                    'href' => url('v1/product/type/{id}/child')
+                ],
             ]
         ]);
     }
@@ -56,6 +60,38 @@ class ProductTypeController extends Controller
             '_links' => [
                 'self' => [
                     'href' => url("v1/product/type/{$id}"),
+                ],
+                'GET_ALL' => [
+                    'href' => url('v1/product/types')
+                ],
+                'GET_CHILD' => [
+                    'href' => url("v1/product/type/{$id}/child")
+                ],
+            ]
+        ]);
+    }
+
+    public function getChildProductTypesById($id, Request $request)
+    {
+        //$credentials = $request->only(['']);
+        $credentials = [];
+        $credentials = array_merge($credentials, ['id' => $id]);
+
+        GetChildProductTypesByIdRequest::validate($credentials);
+
+        $childProductTypes = $this->productTypeService->getChildProductTypesById($id);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Child product types fetched successfully.',
+            'errors' => [],
+            'data' => $childProductTypes,
+            '_links' => [
+                'self' => [
+                    'href' => url("v1/product/type/{$id}/child"),
+                ],
+                'GET_TYPE' => [
+                    'href' => url("v1/product/type/{$id}")
                 ],
                 'GET_ALL' => [
                     'href' => url('v1/product/types')

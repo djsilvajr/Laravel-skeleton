@@ -27,7 +27,8 @@ Route::middleware('api.stack')->group(function () {
     //Product
     Route::get('v1/product/types', [ProductTypeController::class, 'getProductTypes']);
     Route::get('v1/product/type/{id}', [ProductTypeController::class, 'getProductTypeById']);
-
+    Route::get('v1/product/type/{id}/child', [ProductTypeController::class, 'getChildProductTypesById']);
+    
 });
     
 
