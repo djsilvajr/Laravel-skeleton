@@ -1111,6 +1111,238 @@ paths:
                   data:
                     type: array
                     example: []
+  
+  /api/v1/product/type/{id}/child:
+    get:
+      tags:
+        - PRODUCT TYPES
+      summary: Get child product types
+      description: Retrieves a product type and all its child product types by the parent ID.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The ID of the parent product type
+          schema:
+            type: integer
+            example: 1
+      responses:
+        '200':
+          description: Child product types fetched successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Child product types fetched successfully.
+                  errors:
+                    type: array
+                    items: {}
+                    example: []
+                  data:
+                    type: object
+                    properties:
+                      product_type:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            example: 1
+                          name:
+                            type: string
+                            example: "Roupas"
+                          slug:
+                            type: string
+                            example: "roupas"
+                          description:
+                            type: string
+                            example: "Todas as peças de vestuário"
+                          parent_id:
+                            type: integer
+                            nullable: true
+                            example: null
+                          variant_type:
+                            type: string
+                            nullable: true
+                            example: null
+                          order:
+                            type: integer
+                            example: 1
+                          icon:
+                            type: string
+                            nullable: true
+                            example: null
+                          image_url:
+                            type: string
+                            nullable: true
+                            example: null
+                          active:
+                            type: integer
+                            example: 1
+                          created_at:
+                            type: string
+                            example: "2026-02-11 10:25:12"
+                          updated_at:
+                            type: string
+                            example: "2026-02-11 10:25:12"
+                      child_product_types:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            id:
+                              type: integer
+                              example: 2
+                            name:
+                              type: string
+                              example: "Camisas"
+                            slug:
+                              type: string
+                              example: "camisas"
+                            description:
+                              type: string
+                              example: "Camisas masculinas e femininas"
+                            parent_id:
+                              type: integer
+                              example: 1
+                            variant_type:
+                              type: string
+                              example: "clothing"
+                            order:
+                              type: integer
+                              example: 1
+                            icon:
+                              type: string
+                              nullable: true
+                              example: null
+                            image_url:
+                              type: string
+                              nullable: true
+                              example: null
+                            active:
+                              type: integer
+                              example: 1
+                            created_at:
+                              type: string
+                              example: "2026-02-11 10:25:12"
+                            updated_at:
+                              type: string
+                              example: "2026-02-11 10:25:12"
+                        example:
+                          - id: 2
+                            name: "Camisas"
+                            slug: "camisas"
+                            description: "Camisas masculinas e femininas"
+                            parent_id: 1
+                            variant_type: "clothing"
+                            order: 1
+                            icon: null
+                            image_url: null
+                            active: 1
+                            created_at: "2026-02-11 10:25:12"
+                            updated_at: "2026-02-11 10:25:12"
+                          - id: 4
+                            name: "Calças"
+                            slug: "calcas"
+                            description: "Calças de todos os estilos"
+                            parent_id: 1
+                            variant_type: "clothing"
+                            order: 2
+                            icon: null
+                            image_url: null
+                            active: 1
+                            created_at: "2026-02-11 10:25:12"
+                            updated_at: "2026-02-11 10:25:12"
+                  _links:
+                    type: object
+                    properties:
+                      self:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: http://localhost:8020/v1/product/type/1/child
+                      GET_TYPE:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: http://localhost:8020/v1/product/type/1
+                      GET_ALL:
+                        type: object
+                        properties:
+                          href:
+                            type: string
+                            example: http://localhost:8020/v1/product/types
+        '422':
+          description: Invalid parameters.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Error Processing Request
+                  errors:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      - Invalid id parameter
+                  data:
+                    type: array
+                    example: []
+        '401':
+          description: Unauthorized. Bearer token is missing, expired, or invalid.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Token not found
+                  errors:
+                    type: array
+                    items: {}
+                    example: []
+                  data:
+                    type: array
+                    example: []
+        '404':
+          description: Product type not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: boolean
+                    example: false
+                  message:
+                    type: string
+                    example: Product type not found.
+                  errors:
+                    type: array
+                    items: {}
+                    example: []
+                  data:
+                    type: array
+                    example: []
 
 
 
