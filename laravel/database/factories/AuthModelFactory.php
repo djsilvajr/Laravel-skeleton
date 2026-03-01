@@ -3,13 +3,13 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\AuthModel;
+use App\Models\UserModel;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
 class AuthModelFactory extends Factory
 {
-    protected $model = AuthModel::class;
+    protected $model = UserModel::class;
 
     public function definition()
     {

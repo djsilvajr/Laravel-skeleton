@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Models\AuthModel;
+use App\Models\UserModel;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -14,12 +14,12 @@ class UserControllerFeatureTest extends TestCase
     use RefreshDatabase;
 
     private string $token = '';
-    private AuthModel $authUser;
+    private UserModel $authUser;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->authUser = AuthModel::factory()->create([
+        $this->authUser = UserModel::factory()->create([
             'email' => 'admin@teste.com',
             'password' => bcrypt('123456'),
         ]);

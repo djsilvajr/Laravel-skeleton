@@ -662,6 +662,8 @@ paths:
       tags:
         - CACHE
       summary: Store a value in cache.
+      security:
+        - bearerAuth: []
       description: Store a value in cache with a specific key and expiration time.
       requestBody:
         required: true
@@ -732,6 +734,8 @@ paths:
         - CACHE
       summary: Retrieve a value from cache.
       description: Retrieve the value stored in cache for a specific key.
+      security:
+        - bearerAuth: []
       parameters:
         - name: key
           in: path
@@ -790,6 +794,8 @@ paths:
         - CACHE
       summary: Remove a value from cache.
       description: Remove the value stored in cache for a specific key.
+      security:
+        - bearerAuth: []
       parameters:
         - name: key
           in: path

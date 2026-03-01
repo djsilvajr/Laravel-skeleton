@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Facades\Auth;
-use App\Models\AuthModel;
+use App\Models\UserModel;
 
 class ApiAuthenticate
 {
@@ -12,10 +12,10 @@ class ApiAuthenticate
     {
         try {
             Auth::shouldUse('api');
-            $token = JWTAuth::getToken(); 
-            $payload = JWTAuth::getPayload($token); 
-            $userId = $payload->get('sub'); 
-            $user = AuthModel::find($userId);
+            $token = JWTAuth::getToken();
+            $payload = JWTAuth::getPayload($token);
+            $userId = $payload->get('sub');
+            $user = UserModel::find($userId);
 
             if (!$user) {
                 return response()->json(['status' => false, 'message' => 'User not authenticated.'], 401);
