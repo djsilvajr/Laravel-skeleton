@@ -3,11 +3,11 @@ version: '3.8'
 services:
   app:
     build: ./docker/.
-    container_name: laravel12-skeleton
+    container_name: ${APP_CONTAINER_NAME}
     ports:
-      - "8020:9000"
+      - "${APP_PORT}:9000"
     environment:
-      - TZ=America/Sao_Paulo
+      - TZ=${TZ}
     volumes:
       - ./laravel:/var/www/laravel
     depends_on:
@@ -15,16 +15,15 @@ services:
         condition: service_healthy
     networks:
       - laravelSkeleton
-    #command: sh -c "composer install && php artisan serve --host=0.0.0.0 --port=9000"
     command: sh -c "composer install && php artisan octane:start --server=swoole --host=0.0.0.0 --port=9000"
 
   app-frontend:
     build: ./docker/.
-    container_name: laravel12-skeleton-frontend
+    container_name: ${APP_FRONTEND_CONTAINER_NAME}
     ports:
-      - "8080:9000"
+      - "${APP_FRONTEND_PORT}:9000"
     environment:
-      - TZ=America/Sao_Paulo
+      - TZ=${TZ}
     volumes:
       - ./laravel:/var/www/laravel
     depends_on:
@@ -36,9 +35,9 @@ services:
 
   queue:
     build: ./docker/.
-    container_name: laravel12-queue
+    container_name: ${QUEUE_CONTAINER_NAME}
     environment:
-      - TZ=America/Sao_Paulo
+      - TZ=${TZ}
     volumes:
       - ./laravel:/var/www/laravel
     depends_on:
@@ -46,12 +45,12 @@ services:
         condition: service_healthy
     networks:
       - laravelSkeleton
-    command: sh -c "php artisan queue:work --queue=emails,default" 
+    command: sh -c "php artisan queue:work --queue=${QUEUE_NAMES}"
 
   scheduler:
     build: ./docker/.
     environment:
-      - TZ=America/Sao_Paulo
+      - TZ=${TZ}
     volumes:
       - ./laravel:/var/www/laravel
     command: >
@@ -67,14 +66,17 @@ services:
 
   db:
     image: mysql:8.0
-    container_name: laravel12-skeleton-db
+    container_name: ${DB_CONTAINER_NAME}
     restart: always
-    environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-      MYSQL_ROOT_PASSWORD: ""
-      TZ: America/Sao_Paulo
+    environment: 
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: ${TZ}
+    command: --default-authentication-plugin=caching_sha2_password
     ports:
-      - "3306:3306"
+      - "${DB_PORT}:3306"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
@@ -85,12 +87,12 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: redis-laravel-skeleton
-    command: ["redis-server", "--requirepass", "bananinha123"]
+    container_name: ${REDIS_CONTAINER_NAME}
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
     ports:
-      - "6379:6379"
+      - "${REDIS_PORT}:6379"
     healthcheck:
-      test: ["CMD", "sh", "-c", "redis-cli -a bananinha123 PING || exit 1"]
+      test: ["CMD", "sh", "-c", "redis-cli -a ${REDIS_PASSWORD} PING || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -99,21 +101,21 @@ services:
 
   jaeger:
     image: jaegertracing/all-in-one:latest
-    container_name: jaeger
+    container_name: ${JAEGER_CONTAINER_NAME}
     ports:
-      - "16686:16686" # UI do Jaeger
-      - "4317:4317"   # OTLP gRPC
-      - "4318:4318"   # OTLP HTTP
+      - "${JAEGER_UI_PORT}:16686"
+      - "${JAEGER_OTLP_GRPC_PORT}:4317"
+      - "${JAEGER_OTLP_HTTP_PORT}:4318"
     environment:
-      - TZ=America/Sao_Paulo
+      - TZ=${TZ}
     networks:
       - laravelSkeleton
 
   otel-collector:
     image: otel/opentelemetry-collector-contrib:latest
-    container_name: otel-collector
+    container_name: ${OTEL_CONTAINER_NAME}
     environment:
-      - TZ=America/Sao_Paulo
+      - TZ=${TZ}
     volumes:
       - ./docker/otel-collector:/etc/otel-collector/
     command: ["--config=/etc/otel-collector/config.yaml"]

@@ -17,7 +17,7 @@ class GetUserById
         if (empty($user)) {
             throw new ResourceNotFoundException("User not found.", ['ID not identified']);
         }
-        
+
         $response = array(
             'id' => (int) $user['id'],
             'name' => (string) $user['name'],
