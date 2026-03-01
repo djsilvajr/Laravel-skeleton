@@ -17,6 +17,7 @@
 
 - **master** : Trabalho atual com a branch.
 - **1.0** : Primeiro Release do template. Conntem tudo o que o readme promete.
+- **1.1** : Melhorias no docker compose + ajuste de camadas no exemplo de usuarios.
 
 
 > ⚠️ **IMPORTANTE**: Este é um projeto skeleton/boilerplate configurado para **ambiente de desenvolvimento**. 
