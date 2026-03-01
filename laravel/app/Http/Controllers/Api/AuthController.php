@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Controller;
 use App\Exceptions\InvalidCredentialsException;
 use App\Http\Requests\LoginRequest;
-use App\Models\AuthModel;
+use App\Models\UserModel;
 
 class AuthController extends Controller
 {
@@ -18,7 +18,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         LoginRequest::validate($credentials);
 
-        $user = AuthModel::where('email', $credentials['email'])->first();
+        $user = UserModel::Where('email', $credentials['email'])->first();
         $validPass = $user ? Hash::check($credentials['password'], $user->password) : false;
 
         if (!$validPass) {

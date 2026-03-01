@@ -5,10 +5,13 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use Database\Factories\AuthModelFactory;
 
-class User extends Authenticatable implements JWTSubject
+class UserModel extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable;
+
+    protected $table = 'users';
 
     protected $fillable = [
         'name',
@@ -28,6 +31,11 @@ class User extends Authenticatable implements JWTSubject
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    protected static function newFactory(): AuthModelFactory
+    {
+        return AuthModelFactory::new();
     }
 
     public function getJWTIdentifier()
@@ -66,4 +74,25 @@ class User extends Authenticatable implements JWTSubject
     {
         return $query->where('email', $email);
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(
+            RolesModel::class,
+            'role_user',       // Tabela pivot
+            'user_id',         // Chave neste model (user)
+            'role_id'          // Chave no model relacionado (roles)
+        );
+    }
+
+    public function hasPermission($permissionName)
+    {
+        foreach ($this->roles as $role) {
+            if ($role->hasPermission($permissionName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
