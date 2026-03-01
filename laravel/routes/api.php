@@ -23,6 +23,5 @@ Route::middleware('api.stack')->group(function () {
     Route::get('/cache/{key}', [CacheController::class, 'show']);
     Route::delete('/cache/{key}', [CacheController::class, 'destroy']);
 });
-    
 
-?>
+

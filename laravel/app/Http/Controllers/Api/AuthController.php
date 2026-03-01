@@ -18,7 +18,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
         LoginRequest::validate($credentials);
 
-        $user = UserModel::Where('email', $credentials['email'])->first();
+        $user = UserModel::where('email', $credentials['email'])->first();
         $validPass = $user ? Hash::check($credentials['password'], $user->password) : false;
 
         if (!$validPass) {

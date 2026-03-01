@@ -8,7 +8,6 @@ use App\Http\Middleware\TraceRequests;
 use App\Http\Middleware\ApiAuthenticate;
 use App\Http\Middleware\WebAuthenticate;
 use App\Http\Middleware\CheckUserPermission;
-use GPBMetadata\Opentelemetry\Proto\Trace\V1\Trace;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -37,9 +36,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'web.auth:web',
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class,
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,    
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
-        
+
         //$middleware->append(TraceRequests::class);
     })->withProviders([
         \App\Providers\TelemetrySdkServiceProvider::class,
